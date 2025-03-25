@@ -168,7 +168,7 @@ add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 
 function ortho_post_types() {
     register_post_type('product', array(
-        'capability_type' => 'product',
+		'capability_type' => 'product',
         'map_meta_cap' => true,
         'public' => true,
         'labels' => array(
@@ -178,13 +178,13 @@ function ortho_post_types() {
             'all_items' => 'All Products',
             'singular_name' => 'Product'
         ),
-        'has_archive' => true,
-        'menu_icon' => 'dashicons-products',
+		'has_archive' => true,
+		'menu_icon' => 'dashicons-products',
         'supports' => array('title', 'custom-fields', 'thumbnail', 'editor'),
         'rewrite' => array('slug' => 'products'),
     ));
 
-    register_taxonomy('product_category', 'product', array(
+	register_taxonomy('product_category', 'product', array(
         'label' => 'Product Categories',
         'rewrite' => array('slug' => 'product-category'),
         'hierarchical' => true,
@@ -226,33 +226,22 @@ function ortho_post_types() {
     ));
 
 
-	register_post_type('testimonal', array(
-		'capability_type' => 'testimonal',
-		'map_meta_cap' => true,
-		'public' => true,
-		'labels' => array(
-			'name' => 'Testimonials',
-			'add_new_item' => 'Add New Testimonial',
-			'edit_item' => 'Edit Testimonial',
-			'all_items' => 'All Testimonials',
-		'	singular_name' => 'Testimonial'
+register_post_type('testimonal', array(
+	'capability_type' => 'testimonal',
+	'map_meta_cap' => true,
+	'public' => true,
+	'labels' => array(
+		'name' => 'Testimonials',
+		'add_new_item' => 'Add New Testimonial',
+		'edit_item' => 'Edit Testimonial',
+		'all_items' => 'All Testimonials',
+		'singular_name' => 'Testimonial'
 	),
 	'has_archive' => true,
 	'menu_icon' => 'dashicons-format-quote',
-	'supports' => array('title', 'custom-fields', 'thumbnail', 'editor'),
+	'supports' => array('custom-fields'),
 	'rewrite' => array('slug' => 'testimonials'),
-	));
-
+));
 }
-
 add_action('init', 'ortho_post_types');
-
-function theme_activation_flush_rewrite_rules() {
-    ortho_post_types(); 
-    flush_rewrite_rules();
-}
-
-add_action('after_switch_theme', 'theme_activation_flush_rewrite_rules');
-
-?>	 
-
+?>

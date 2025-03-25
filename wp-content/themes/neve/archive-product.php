@@ -12,61 +12,67 @@ get_header();
 
 ?>
 
-<div id="nv-edd-download-archive-container" class="<?php echo esc_attr( $container_class ); ?>">
-    <div id="wrapper">
-        <?php
-        /**
-         * Executes actions before the download content.
-         *
-         * @since 3.0.0
-         */
-        do_action( 'neve_before_download_archive' );
-        ?>
-		
-        <div id="nv-edd-grid-container">
-            <?php
-            $args = array(
-                'post_type' => 'product', 
-                'posts_per_page' => 2,
-                'tax_query' => array(
-                    array(
-                        'taxonomy' => 'product_category',
-                        'field'    => 'slug',
-                        'terms'    => array( 'braces-and-supports', 'splints-and-immobilizers' ),
-                        'operator' => 'IN',
-                    ),
-                ),
-            );
+<div id= "nv-edd-download-archive-container" class="<?php echo esc_attr( $container_class ); ?>">
+    
 
-            $query = new WP_Query( $args );
+		<div id="wrapper">
+			<?php
+			/**
+			 * Executes actions before the download content.
+			 *
+			 * @since 3.0.0
+			 */
+			do_action( 'neve_before_download_archive' );
+			?>
+			<div id="nv-edd-grid-container">
 
-            if ( $query->have_posts() ) :
-                while ( $query->have_posts() ) :
-                    $query->the_post();
-                    get_template_part( 'template-parts/content-download-archive' );
-                endwhile;
-            else :
-                get_template_part( 'template-parts/content', 'none' );
-            endif;
+				<?php
+					
+					$query = new WP_Query(array(
+						'post_type'      => 'product',
+						'posts_per_page' => -1, 
+						'tax_query'      => array(
+							array(
+								'taxonomy' => 'product_category',
+								'field'    => 'slug',
+								'terms'    => array('foot-brace', 'hand-brace') 
+								'operator' => 'IN',
+							),
+						),
+					));
+					
+					if ($query->have_posts()) {
+						while ($query->have_posts()) {
+							$query->the_post();
+							$description = get_post_meta(get_the_ID(), 'product-description', true);
+							$product_image = get_the_post_thumbnail(get_the_ID(), 'medium');
 
-            wp_reset_postdata();
-            ?>
-        </div>
+							'<p>' . get_the_title() . '</p><br>';
+							echo $product_image
+							echo '<p>' . $description . '<p>'
+						}
+						wp_reset_postdata();
+					} 
+					else {
+						get_template_part( 'template-parts/content', 'none' );
+					}
+				?>
+			</div>
+				<?php 
+				/**
+				 * Executes actions after the post content.
+				 *
+				 * @since 3.0.0
+				 */
+				do_action( 'neve_after_download_archive' );
 
-        <?php
-        /**
-         * Executes actions after the post content.
-         *
-         * @since 3.0.0
-         */
-        do_action( 'neve_after_download_archive' );
+				/**
+				 * Download pagination
+				 */
+				neve_edd_download_nav();        
+				?>
+		</div>
 
-        /**
-         * Download pagination
-         */
-        //neve_edd_download_nav();
-        ?>
-    </div>
 </div>
 
 <?php
