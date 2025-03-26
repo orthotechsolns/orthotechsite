@@ -180,7 +180,7 @@ function ortho_post_types() {
         ),
 		'has_archive' => true,
 		'menu_icon' => 'dashicons-products',
-        'supports' => array('title', 'custom-fields', 'thumbnail', 'editor'),
+        'supports' => array('title', 'custom-fields', 'thumbnail'),
         'rewrite' => array('slug' => 'products'),
     ));
 
@@ -204,7 +204,7 @@ function ortho_post_types() {
         ),
 		'has_archive' => true,
 		'menu_icon' => 'dashicons-camera',
-        'supports' => array('custom-fields'),
+        'supports' => array('title', 'custom-fields', 'thumbnail'),
         'rewrite' => array('slug' => 'photos'),
     ));
 
@@ -221,7 +221,7 @@ function ortho_post_types() {
         ),
 		'has_archive' => true, //(Did not create a single-faq.php, as all FAQs can be displayed on one page)
 		'menu_icon' => 'dashicons-editor-help',
-        'supports' => array('custom-fields'),
+        'supports' => array('title', 'custom-fields', 'thumbnail'),
         'rewrite' => array('slug' => 'photos'),
     ));
 
@@ -239,7 +239,7 @@ register_post_type('testimonal', array(
 	),
 	'has_archive' => true,
 	'menu_icon' => 'dashicons-format-quote',
-	'supports' => array('custom-fields'),
+	'supports' => array('title', 'custom-fields', 'thumbnail'),
 	'rewrite' => array('slug' => 'testimonials'),
 ));
 }

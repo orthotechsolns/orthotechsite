@@ -35,10 +35,10 @@ get_header();
 							array(
 								'taxonomy' => 'product_category',
 								'field'    => 'slug',
-								'terms'    => array('foot-brace', 'hand-brace') 
+								'terms'    => array('foot-brace', 'hand-brace'), 
 								'operator' => 'IN',
-							),
-						),
+							)
+						)
 					));
 					
 					if ($query->have_posts()) {
@@ -48,8 +48,6 @@ get_header();
 							$product_image = get_the_post_thumbnail(get_the_ID(), 'medium');
 
 							'<p>' . get_the_title() . '</p><br>';
-							echo $product_image
-							echo '<p>' . $description . '<p>'
 						}
 						wp_reset_postdata();
 					} 

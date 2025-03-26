@@ -63,14 +63,14 @@ get_permalink($theParent); ?>">
  			)); 
 
  				if($theParent or $testArray){ ?>
- 					<div class="page-links">
- 					<h2 class="page-links__title">
- 					<a href="<?php echo get_permalink($theParent); ?>">
+ 					<div class="page-links" style="background: #f0f4f8; border-left: 4px solid #0073aa; padding: 15px; margin-left: 20px; width: 30%; float: right; margin-top: 30px;">
+ 					<h2 class="page-links__title" style="margin: 0 0 10px;">
+ 					<a href="<?php echo get_permalink($theParent); ?>" style="color: #0073aa; text-decoration: none;">
  					<?php echo get_the_title($theParent); ?>
  					</a>
  					</h2>
 
- 					<ul class="min-list">
+ 					<ul class="min-list: none; padding: 0;">
  			<?php
  					if($theParent){
 	 					$findChildrenOf = $theParent;
