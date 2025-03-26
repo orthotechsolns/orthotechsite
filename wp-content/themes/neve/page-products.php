@@ -1,31 +1,62 @@
 <?php
 /**
- * The template for displaying product archives
+ * Template Name: Products Page
+ * 
+ * Custom template for displaying all products in a grid layout
  *
  * @package Neve
  */
 
-$container_class = apply_filters( 'neve_container_class_filter', 'container', 'archive-product' );
+// Add debug output to verify template is loading
+echo '<!-- Products Page Template Loaded -->'; 
+
+$container_class = apply_filters( 'neve_container_class_filter', 'container', 'single-page' );
 
 get_header();
 
+// Force using the correct page ID and query
+global $post;
+$page_id = get_queried_object_id();
+
 // Custom query parameters
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+$args = array(
+    'post_type' => 'product',
+    'posts_per_page' => 12,
+    'paged' => $paged,
+    'orderby' => 'title',
+    'order' => 'ASC'
+);
+
+// Custom query
+$products_query = new WP_Query($args);
+
+// Debug output to check if query is working
+echo '<!-- Products found: ' . $products_query->found_posts . ' -->';
 ?>
 
 <div class="<?php echo esc_attr( $container_class ); ?> products-container">
     <div class="row">
-        <div class="nv-index-posts col">
+        <div class="nv-single-page-wrap col">
             <div class="products-header">
                 <h1 class="page-title">Products</h1>
+                <div class="products-description">
+                    <?php 
+                    // Get content from the actual Products page
+                    $products_page = get_post($page_id);
+                    if ($products_page) {
+                        echo apply_filters('the_content', $products_page->post_content);
+                    }
+                    ?>
+                </div>
             </div>
 
             <!-- Display products count -->
-            <p class="products-count">Showing <?php echo $wp_query->found_posts; ?> products</p>
+            <p class="products-count">Showing <?php echo $products_query->found_posts; ?> products</p>
 
-            <?php if (have_posts()) : ?>
+            <?php if ($products_query->have_posts()) : ?>
                 <div class="products-grid">
-                    <?php while (have_posts()) : the_post(); 
+                    <?php while ($products_query->have_posts()) : $products_query->the_post(); 
                         // Format product title for image path
                         $product_title = get_the_title();
                         $image_name = str_replace(' ', '-', $product_title);
@@ -55,19 +86,31 @@ $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
                 </div>
 
                 <div class="products-pagination">
-                    <div class="custom-pagination">
-                        <?php 
+                    <?php 
+                    $total_pages = $products_query->max_num_pages;
+                    if ($total_pages > 1) {
+                        $current_page = max(1, get_query_var('paged'));
+                        
+                        echo '<div class="custom-pagination">';
+                        
                         echo paginate_links(array(
+                            'base' => get_pagenum_link(1) . '%_%',
+                            'format' => 'page/%#%',
+                            'current' => $current_page,
+                            'total' => $total_pages,
                             'prev_text' => '&laquo; Previous',
                             'next_text' => 'Next &raquo;',
                             'type' => 'list'
                         ));
-                        ?>
-                    </div>
+                        
+                        echo '</div>';
+                    }
+                    ?>
                 </div>
+                <?php wp_reset_postdata(); ?>
             <?php else : ?>
                 <div class="no-products">
-                    <p>No products found.</p>
+                    <p>No products found. Please check your product post type configuration.</p>
                 </div>
             <?php endif; ?>
         </div>

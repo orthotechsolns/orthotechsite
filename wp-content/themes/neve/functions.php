@@ -244,4 +244,11 @@ register_post_type('testimonal', array(
 ));
 }
 add_action('init', 'ortho_post_types');
+
+add_action('template_redirect', function() {
+    global $template;
+    if (is_user_logged_in() && current_user_can('administrator')) {
+        echo '<!-- Current template: ' . $template . ' -->';
+    }
+});
 ?>
