@@ -9,8 +9,21 @@ $container_class = apply_filters( 'neve_container_class_filter', 'container', 'a
 
 get_header();
 
-// Custom query parameters
-$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+// Get current page for pagination
+$paged = (get_query_var('paged')) ? absint(get_query_var('paged')) : 1;
+
+// Override global $wp_query with our custom query for proper pagination
+global $wp_query;
+$temp_query = $wp_query; // Store the original query
+
+// Create custom query for products
+$args = array(
+    'post_type'      => 'product',
+    'posts_per_page' => 12,
+    'paged'          => $paged,
+);
+
+$wp_query = new WP_Query($args);
 ?>
 
 <div class="<?php echo esc_attr( $container_class ); ?> products-container">
@@ -20,62 +33,68 @@ $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
                 <h1 class="page-title">Products</h1>
             </div>
 
-            <!-- Display products count -->
-            <p class="products-count">Showing <?php echo $wp_query->found_posts; ?> products</p>
-
-            <?php if (have_posts()) : ?>
-                <div class="products-grid">
-                    <?php while (have_posts()) : the_post(); 
-                        // Format product title for image path
-                        $product_title = get_the_title();
-                        $image_name = str_replace(' ', '-', $product_title);
-                        $product_image_url = site_url('/wp-content/uploads/2025/03/' . $image_name . '-300x300.jpg');
-                    ?>
-                        <div class="product-card">
-                            <div class="product-image">
-                                <a href="<?php the_permalink(); ?>">
-                                    <img src="<?php echo esc_url($product_image_url); ?>" alt="<?php the_title_attribute(); ?>" />
-                                </a>
-                            </div>
-                            <div class="product-details">
-                                <h2 class="product-title">
-                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                </h2>
-                                <?php 
-                                // Display product description if available using ACF
-                                if (function_exists('get_field') && get_field('product_description')) : ?>
-                                    <div class="product-excerpt">
-                                        <?php echo wp_trim_words(get_field('product_description'), 15); ?>
-                                    </div>
-                                <?php endif; ?>
-                                <a href="<?php the_permalink(); ?>" class="product-link">View Details</a>
-                            </div>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-
-                <div class="products-pagination">
-                    <div class="custom-pagination">
-                        <?php 
-                        echo paginate_links(array(
-                            'prev_text' => '&laquo; Previous',
-                            'next_text' => 'Next &raquo;',
-                            'type' => 'list'
-                        ));
-                        ?>
-                    </div>
-                </div>
-            <?php else : ?>
-                <div class="no-products">
-                    <p>No products found.</p>
-                </div>
-            <?php endif; ?>
+            <?php
+            // Display products count
+            echo '<p class="products-count">Showing ' . $wp_query->found_posts . ' products</p>';
+            
+            if ($wp_query->have_posts()) {
+                echo '<div class="products-grid">';
+                
+                while ($wp_query->have_posts()) {
+                    $wp_query->the_post();
+                    
+                    // Format image path
+                    $image_name = str_replace(' ', '-', get_the_title());
+                    $product_image_url = site_url('/wp-content/uploads/2025/03/' . $image_name . '-300x300.jpg');
+                    
+                    echo '<div class="product-card">';
+                    
+                    // Product image
+                    echo '<div class="product-image">';
+                    echo '<a href="' . get_permalink() . '">';
+                    echo '<img src="' . esc_url($product_image_url) . '" alt="' . get_the_title() . '" />';
+                    echo '</a>';
+                    echo '</div>';
+                    
+                    // Product details
+                    echo '<div class="product-details">';
+                    echo '<h2 class="product-title"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h2>';
+                    
+                    // Product description (if available)
+                    if (function_exists('get_field') && get_field('product_description')) {
+                        echo '<div class="product-excerpt">' . wp_trim_words(get_field('product_description'), 15) . '</div>';
+                    }
+                    
+                    echo '<a href="' . get_permalink() . '" class="product-link">View Details</a>';
+                    echo '</div>';
+                    
+                    echo '</div>'; // End product-card
+                }
+                
+                echo '</div>'; // End products-grid
+            
+                echo '<div class="products-pagination"><div class="custom-pagination">';
+                
+                echo paginate_links(array(
+                    'prev_text' => '&laquo; Previous',
+                    'next_text' => 'Next &raquo;',
+                    'type' => 'list',
+                ));
+                
+                echo '</div></div>';
+                
+            } else {
+                echo '<div class="no-products"><p>No products found.</p></div>';
+            }
+            
+            $wp_query = $temp_query;
+            wp_reset_postdata();
+            ?>
         </div>
     </div>
 </div>
 
 <style>
-/* Basic styling for product grid */
 .products-header {
     margin-bottom: 40px;
     text-align: center;
