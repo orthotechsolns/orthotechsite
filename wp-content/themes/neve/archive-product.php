@@ -19,7 +19,7 @@ $temp_query = $wp_query; // Store the original query
 // Create custom query for products
 $args = array(
     'post_type'      => 'product',
-    'posts_per_page' => 12,
+    'posts_per_page' => 4,
     'paged'          => $paged,
 );
 
