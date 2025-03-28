@@ -19,16 +19,19 @@ get_header(); ?>
 
         if ($faq_query->have_posts()) :
             while ($faq_query->have_posts()) : $faq_query->the_post();
-                // Get the related product using ACF relationship field
-                $related_products = get_field('related_products'); // Using the ACF relationship field
+                $faq_question = get_field('faq_question');
+                $faq_answer = get_field('faq_answer');
+                $related_products = get_field('related_products');
                 ?>
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3><?php the_title(); ?></h3>
+                        <h3>Q: <?php echo $faq_question ? $faq_question : get_the_title(); ?></h3>
                         <button class="toggle-answer">+</button>
                     </div>
                     <div class="faq-answer">
-                        <?php the_content(); ?>
+                        <div class="answer-content">
+                            <h3>A:</h3><?php echo $faq_answer ? $faq_answer : get_the_content(); ?>
+                        </div>
                         <?php if ($related_products) : ?>
                             <div class="faq-related-products">
                                 <strong>Related Products:</strong>
@@ -86,32 +89,91 @@ get_header(); ?>
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 10px;
     background: #f9f9f9;
     cursor: pointer;
+    border-left: 5px solid #333;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.faq-question:hover {
+    background: #e6e6e6;
+    border-color: #0073aa;
+}
+
+.faq-question h3 {
+    margin: 0;
+    font-weight: bold;
 }
 
 .faq-answer {
     display: none;
     padding: 15px;
     background: #fff;
+    border-left: 5px solid #0073aa;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.faq-answer h3 {
+    margin: 0 0 10px;
+    font-weight: bold;
+    color: #0073aa;
+}
+
+.faq-related-products {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.faq-related-products strong {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .faq-related-products ul {
-    margin: 10px 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .faq-related-products ul li {
-    margin: 5px 0;
+    margin: 0;
+    padding: 5px 10px;
+    background: #0073aa;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.faq-related-products ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.faq-related-products ul li a:hover {
+    text-decoration: underline;
 }
 
 .toggle-answer {
-    background: none;
+    background: lightskyblue;
     border: none;
     font-size: 18px;
     cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 3px;
+    transition: background 0.3s;
+}
+
+.toggle-answer:hover {
+    background: #0073aa;
+    color: #fff;
 }
 </style>
 
@@ -125,6 +187,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const toggle = item.querySelector('.toggle-answer');
 
         question.addEventListener('click', () => {
+            // Close all other answers
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.querySelector('.faq-answer').style.display = 'none';
+                    otherItem.querySelector('.toggle-answer').textContent = '+';
+                }
+            });
+
+            // Toggle the current answer
             const isOpen = answer.style.display === 'block';
             answer.style.display = isOpen ? 'none' : 'block';
             toggle.textContent = isOpen ? '+' : '-';
