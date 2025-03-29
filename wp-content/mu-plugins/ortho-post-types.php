@@ -49,12 +49,12 @@ function ortho_post_types()
         ),
 		'has_archive' => true, //(Did not create a single-faq.php, as all FAQs can be displayed on one page)
 		'menu_icon' => 'dashicons-editor-help',
-        'supports' => array('custom-fields'),
+        'supports' => array('title', 'custom-fields'),
         'rewrite' => array('slug' => 'photos'),
     ));
 
     register_post_type('testimonial', array(
-        'capability_type' => 'testimonial', // FIX: corrected spelling
+        'capability_type' => 'testimonial',
         'map_meta_cap' => true,
         'public' => true,
         'labels' => array(
@@ -66,7 +66,7 @@ function ortho_post_types()
         ),
         'has_archive' => true,
         'menu_icon' => 'dashicons-format-quote',
-        'supports' => array('custom-fields'),
+        'supports' => array('title', 'custom-fields'),
         'rewrite' => array('slug' => 'testimonials'),
     ));
 }
