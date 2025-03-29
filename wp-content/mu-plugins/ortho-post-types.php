@@ -13,17 +13,17 @@ function ortho_post_types()
             'all_items' => 'All Products',
             'singular_name' => 'Product'
         ),
-        'has_archive' => true,
+        'has_archive' => 'products', // Use 'products' as the archive URL
         'menu_icon' => 'dashicons-products',
-        'supports' => array('title', 'excerpt', 'custom-fields'),
-        'rewrite' => array('slug' => 'products'),
+        'supports' => array('title', 'excerpt', 'custom-fields', 'thumbnail'),
+        'rewrite' => array('slug' => 'product'), // Keep single posts as 'product'
     ));
     
     // Register product category taxonomy
     register_taxonomy('product_category', 'product', array(
         'label' => 'Product Categories',
         'rewrite' => array(
-            'slug' => 'products', 
+            'slug' => 'products/category', 
             'with_front' => false,
             'hierarchical' => true
         ),
@@ -85,20 +85,27 @@ function ortho_post_types()
 add_action('init', 'ortho_post_types');
 
 /**
- * Add custom rewrite rules to handle product categories
+ * Add custom rewrite rules to handle product categories and single products
  */
 function ortho_add_custom_rewrite_rules() {
     // Add rewrite rule for product categories
     add_rewrite_rule(
-        'products/([^/]+)/?$',
+        'products/category/([^/]+)/?$',
         'index.php?product_category=$matches[1]',
         'top'
     );
     
     // Add rewrite rule for product category pagination
     add_rewrite_rule(
-        'products/([^/]+)/page/([0-9]{1,})/?$',
+        'products/category/([^/]+)/page/([0-9]{1,})/?$',
         'index.php?product_category=$matches[1]&paged=$matches[2]',
+        'top'
+    );
+    
+    // Ensure single product URLs work correctly
+    add_rewrite_rule(
+        'product/([^/]+)/?$',
+        'index.php?product=$matches[1]',
         'top'
     );
 }
@@ -122,4 +129,10 @@ register_activation_hook(__FILE__, 'ortho_set_flush_flag');
 function ortho_set_flush_flag() {
     update_option('ortho_flush_needed', true);
 }
-?>
+
+// Force flush rewrite rules once to fix product permalinks
+function ortho_force_flush_rewrite_rules() {
+    update_option('ortho_flush_needed', true);
+}
+// Uncomment this line to force flush rewrite rules, then comment it out after visiting the site once
+add_action('init', 'ortho_force_flush_rewrite_rules', 20);

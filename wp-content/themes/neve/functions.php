@@ -240,3 +240,19 @@ add_action('template_redirect', function() {
         echo '<!-- Current template: ' . $template . ' -->';
     }
 });
+
+/**
+ * Ensure archive-product.php is used for the products archive
+ */
+function ortho_products_archive_template($template) {
+    // For the main products archive
+    if (is_post_type_archive('product')) {
+        $new_template = locate_template(array('archive-product.php'));
+        if ('' != $new_template) {
+            return $new_template;
+        }
+    }
+    
+    return $template;
+}
+add_filter('template_include', 'ortho_products_archive_template');
