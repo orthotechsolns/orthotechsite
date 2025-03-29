@@ -18,6 +18,18 @@ function ortho_post_types()
         'supports' => array('title', 'excerpt', 'custom-fields'),
         'rewrite' => array('slug' => 'products'),
     ));
+    
+    // Register product category taxonomy
+    register_taxonomy('product_category', 'product', array(
+        'label' => 'Product Categories',
+        'rewrite' => array(
+            'slug' => 'products', 
+            'with_front' => false,
+            'hierarchical' => true
+        ),
+        'hierarchical' => true,
+        'show_admin_column' => true,
+    ));
 
     register_post_type('photo', array(
         'capability_type' => 'photo',
@@ -71,4 +83,43 @@ function ortho_post_types()
     ));
 }
 add_action('init', 'ortho_post_types');
+
+/**
+ * Add custom rewrite rules to handle product categories
+ */
+function ortho_add_custom_rewrite_rules() {
+    // Add rewrite rule for product categories
+    add_rewrite_rule(
+        'products/([^/]+)/?$',
+        'index.php?product_category=$matches[1]',
+        'top'
+    );
+    
+    // Add rewrite rule for product category pagination
+    add_rewrite_rule(
+        'products/([^/]+)/page/([0-9]{1,})/?$',
+        'index.php?product_category=$matches[1]&paged=$matches[2]',
+        'top'
+    );
+}
+add_action('init', 'ortho_add_custom_rewrite_rules');
+
+/**
+ * Flush rewrite rules when plugin is activated
+ * Only run this once when needed, not on every page load
+ */
+function ortho_flush_rewrite_rules() {
+    // Check if we need to flush
+    if (get_option('ortho_flush_needed') == true) {
+        flush_rewrite_rules();
+        update_option('ortho_flush_needed', false);
+    }
+}
+add_action('init', 'ortho_flush_rewrite_rules');
+
+// Set flush flag when plugin activated
+register_activation_hook(__FILE__, 'ortho_set_flush_flag');
+function ortho_set_flush_flag() {
+    update_option('ortho_flush_needed', true);
+}
 ?>

@@ -166,9 +166,12 @@ add_filter(
 
 add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 
+/**
+ * Register custom post types and taxonomies
+ */
 // function ortho_post_types() {
 //     register_post_type('product', array(
-// 		'capability_type' => 'product',
+//         'capability_type' => 'product',
 //         'map_meta_cap' => true,
 //         'public' => true,
 //         'labels' => array(
@@ -178,72 +181,58 @@ add_filter( 'themeisle_sdk_enable_telemetry', '__return_true' );
 //             'all_items' => 'All Products',
 //             'singular_name' => 'Product'
 //         ),
-// 		'has_archive' => true,
-// 		'menu_icon' => 'dashicons-products',
-//         'supports' => array('title', 'custom-fields', 'thumbnail'),
-//         'rewrite' => array('slug' => 'products'),
+//         'has_archive' => true,
+//         'menu_icon' => 'dashicons-products',
+//         'supports' => array('title', 'editor', 'custom-fields', 'thumbnail'),
+//         'rewrite' => array('slug' => 'product'),
 //     ));
-
-// 	register_taxonomy('product_category', 'product', array(
-//         'label' => 'Product Categories',
-//         'rewrite' => array('slug' => 'product-category'),
-//         'hierarchical' => true,
-//         'show_admin_column' => true,
-//     ));
-
-// 	register_post_type('photo', array(
-// 		'capability_type' => 'photo',
-//         'map_meta_cap' => true,
-//         'public' => true,
-//         'labels' => array(
-//             'name' => 'Photos',
-//             'add_new_item' => 'Add New Photo',
-//             'edit_item' => 'Edit Photo',
-//             'all_items' => 'All Photos',
-//             'singular_name' => 'Photo'
-//         ),
-// 		'has_archive' => true,
-// 		'menu_icon' => 'dashicons-camera',
-//         'supports' => array('title', 'custom-fields', 'thumbnail'),
-//         'rewrite' => array('slug' => 'photos'),
-//     ));
-
-// 	register_post_type('faq', array(
-// 		'capability_type' => 'faq',
-//         'map_meta_cap' => true,
-//         'public' => true,
-//         'labels' => array(
-//             'name' => 'FAQs',
-//             'add_new_item' => 'Add New FAQ',
-//             'edit_item' => 'Edit FAQ',
-//             'all_items' => 'All FAQs',
-//             'singular_name' => 'FAQ'
-//         ),
-// 		'has_archive' => true, //(Did not create a single-faq.php, as all FAQs can be displayed on one page)
-// 		'menu_icon' => 'dashicons-editor-help',
-//         'supports' => array('title', 'custom-fields', 'thumbnail'),
-//         'rewrite' => array('slug' => 'photos'),
-//     ));
-
-
-// register_post_type('testimonial', array(
-// 	'capability_type' => 'testimonial',
-// 	'map_meta_cap' => true,
-// 	'public' => true,
-// 	'labels' => array(
-// 		'name' => 'Testimonials',
-// 		'add_new_item' => 'Add New Testimonial',
-// 		'edit_item' => 'Edit Testimonial',
-// 		'all_items' => 'All Testimonials',
-// 		'singular_name' => 'Testimonial'
-// 	),
-// 	'has_archive' => true,
-// 	'menu_icon' => 'dashicons-format-quote',
-// 	'supports' => array('title', 'custom-fields', 'thumbnail'),
-// 	'rewrite' => array('slug' => 'testimonials'),
-// ));
+    
+//     // Flush rewrite rules only when needed
+//     if (get_option('ortho_flush_rewrite_rules')) {
+//         flush_rewrite_rules();
+//         delete_option('ortho_flush_rewrite_rules');
+//     }
 // }
 // add_action('init', 'ortho_post_types');
+
+// Set flag to flush rewrite rules on theme activation
+function ortho_activate() {
+    add_option('ortho_flush_rewrite_rules', true);
+}
+register_activation_hook(__FILE__, 'ortho_activate');
+
+/**
+ * Custom template routing for product categories
+ */
+function ortho_category_template($template) {
+    // For the categories we want to use our unified template
+    if (is_tax('product_category', array('foot-braces', 'hand-braces', 'knee-braces'))) {
+        $new_template = locate_template(array('taxonomy-products.php'));
+        if ('' != $new_template) {
+            return $new_template;
+        }
+    }
+    
+    return $template;
+}
+add_filter('template_include', 'ortho_category_template');
+
+// Remove the old duplicate filter that's causing issues
+// add_filter('template_include', function ($template) {
+//     if (is_tax('product_category', 'hand-braces')) {
+//         $new_template = locate_template(array('archive-hand-braces.php'));
+//         if ($new_template) {
+//             return $new_template;
+//         }
+//     }
+//     if (is_tax('product_category', 'knee-braces')) {
+//         $new_template = locate_template(array('archive-knee-braces.php'));
+//         if ($new_template) {
+//             return $new_template;
+//         }
+//     }
+//     return $template;
+// });
 
 add_action('template_redirect', function() {
     global $template;
@@ -251,4 +240,3 @@ add_action('template_redirect', function() {
         echo '<!-- Current template: ' . $template . ' -->';
     }
 });
-?>
