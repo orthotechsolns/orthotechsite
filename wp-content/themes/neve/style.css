@@ -1,19 +1,39 @@
 /*
-Theme Name:     Neve
-Theme URI:      https://themeisle.com/themes/neve/
-Author:         ThemeIsle
-Author URI:     https://themeisle.com
-Tested up to:   6.2
-Requires PHP:   7.0
+Theme Name: Neve
+Theme URI: https://themeisle.com/themes/neve/
+Author: ThemeIsle
+Author URI: https://themeisle.com
+Description: Neve is a super fast, easily customizable, multi-purpose theme. It's perfect for blogs, small business, startups, agencies, firms, e-commerce shops (WooCommerce storefront) as well as personal portfolio sites and most types of projects. A fully AMP optimized and responsive theme, Neve will load in mere milliseconds and adapt perfectly on any viewing device. While it is lightweight and has a minimalist design, the theme is highly extendable, it has a highly SEO optimized code, resulting in top rankings in Google search results. Neve works perfectly with Gutenberg and the most popular page builders (Elementor, Brizy, Beaver Builder, Visual Composer, SiteOrigin, Divi). Neve is also WooCommerce ready, responsive, RTL & translation ready. Look no further. Neve is the perfect theme for you!
+Version: 3.5.1
 Requires at least: 5.5
-Description:    Neve is a next-generation, ultra-fast WordPress theme designed for top performance, SEO, and Core Web Vitals. Its lightweight codebase and small size ensure minimal overhead and lightning-fast load times. Fully compatible with the block editor, popular page builders (Elementor, Bricks, Oxygen etc), and WooCommerce, it’s perfect for blogs, small businesses, agencies, portfolios, and online stores. With responsive design, multilingual translations, and easy customization options, Neve empowers you to create a future-proof, high-ranking online presence. Discover everything Neve has to offer and explore our powerful premium version at https://themeisle.com/themes/neve/.
-Version:        4.0.1
-License:        GNU General Public License v2 or later
-License URI:    http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain:    neve
-Pro Slug:  			neve-pro-addon
-AMP: 						true
+Tested up to: 6.1
+Requires PHP: 7.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WordPress Available:  yes
 Requires License:     no
+Text Domain: neve
 Tags: blog, custom-logo, e-commerce, rtl-language-support, grid-layout, one-column, two-columns, custom-background, custom-colors, custom-header, custom-menu, featured-image-header, featured-images, flexible-header, full-width-template, sticky-post, theme-options, threaded-comments, translation-ready, accessibility-ready, wide-blocks, block-styles, footer-widgets, portfolio, left-sidebar, right-sidebar
 */
+
+/* Unified breadcrumb styling */
+.ortho-breadcrumbs {
+    margin-bottom: 20px;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #777;
+}
+
+.ortho-breadcrumbs a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.ortho-breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+.ortho-breadcrumbs .current {
+    color: #333;
+    font-weight: bold;
+}

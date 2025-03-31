@@ -45,15 +45,11 @@ $context = class_exists( 'WooCommerce', false ) && ( is_cart() || is_checkout() 
 			<?php
  	$theParent = wp_get_post_parent_ID(get_the_ID());
 		if($theParent){ ?>
-			<div class="metabox metabox--position-up metabox--with-home-link">
-			<p>
-			<a class="metabox__blog-home-link" style="background-color: #0D3B66; color: #FFF; border-radius: 3px; padding: 10px 15px; display: inline-block; font-weight: normal;" href="<?php echo
-get_permalink($theParent); ?>">
- 			<i class="fa fa-home" aria-hidden="true"></i> Back to <?php echo get_the_title($theParent); ?>
-			</a>
-			<span class="metabox__main" style="background-color:rgb(44, 44, 44); color: #FFF; border-radius: 3px; padding: 10px 15px; display: inline-block; margin-bottom: 30px; box-shadow: 2px 2px 1px rgba(0, 0, 0, .07);"> <?php echo the_title(); ?> </span>
-			</p>
- 			</div>
+			<div class="ortho-breadcrumbs">
+				<a href="<?php echo esc_url(home_url('/')); ?>">Home</a> &raquo;
+				<a href="<?php echo get_permalink($theParent); ?>"><?php echo get_the_title($theParent); ?></a> &raquo;
+				<span class="current"><?php echo the_title(); ?></span>
+			</div>
  	<?php }
  		?>
 

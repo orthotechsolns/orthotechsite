@@ -40,14 +40,11 @@ $products_query = new WP_Query($args);
 <div class="<?php echo esc_attr( $container_class ); ?> products-container">
     <div class="row">
         <div class="nv-index-posts col">
-            <!-- Breadcrumbs -->
-            <div class="metabox metabox--position-up metabox--with-home-link">
-                <p>
-                    <a class="metabox__blog-home-link" style="background-color: #0D3B66; color: #FFF; border-radius: 3px; padding: 10px 15px; display: inline-block; font-weight: normal;" href="<?php echo get_post_type_archive_link('product'); ?>">
-                        <i class="fa fa-home" aria-hidden="true"></i> Back to Products
-                    </a>
-                    <span class="metabox__main" style="background-color:rgb(44, 44, 44); color: #FFF; border-radius: 3px; padding: 10px 15px; display: inline-block; margin-bottom: 30px; box-shadow: 2px 2px 1px rgba(0, 0, 0, .07);"><?php echo esc_html($category_name); ?></span>
-                </p>
+            <!-- Simplified Breadcrumbs -->
+            <div class="ortho-breadcrumbs">
+                <a href="<?php echo esc_url(home_url('/')); ?>">Home</a> &raquo; 
+                <a href="<?php echo get_post_type_archive_link('product'); ?>">Products</a> &raquo; 
+                <span class="current"><?php echo esc_html($category_name); ?></span>
             </div>
             
             <div class="products-header">

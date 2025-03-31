@@ -23,7 +23,7 @@ function ortho_post_types()
     register_taxonomy('product_category', 'product', array(
         'label' => 'Product Categories',
         'rewrite' => array(
-            'slug' => 'products/category', 
+            'slug' => 'products', 
             'with_front' => false,
             'hierarchical' => true
         ),
@@ -81,6 +81,17 @@ function ortho_post_types()
         'supports' => array('title', 'custom-fields'),
         'rewrite' => array('slug' => 'testimonials'),
     ));
+
+    register_taxonomy('testimonial_category', 'testimonial', array(
+        'label' => 'Testimonial Categories',
+        'rewrite' => array(
+            'slug' => 'testimonials', 
+            'with_front' => false,
+            'hierarchical' => true
+        ),
+        'hierarchical' => true,
+        'show_admin_column' => true,
+    ));
 }
 add_action('init', 'ortho_post_types');
 
@@ -106,6 +117,20 @@ function ortho_add_custom_rewrite_rules() {
     add_rewrite_rule(
         'product/([^/]+)/?$',
         'index.php?product=$matches[1]',
+        'top'
+    );
+    
+    // Add rewrite rule for testimonial categories
+    add_rewrite_rule(
+        'testimonials/([^/]+)/?$',
+        'index.php?testimonial_category=$matches[1]',
+        'top'
+    );
+    
+    // Add rewrite rule for testimonial category pagination
+    add_rewrite_rule(
+        'testimonials/([^/]+)/page/([0-9]{1,})/?$',
+        'index.php?testimonial_category=$matches[1]&paged=$matches[2]',
         'top'
     );
 }
@@ -134,5 +159,5 @@ function ortho_set_flush_flag() {
 function ortho_force_flush_rewrite_rules() {
     update_option('ortho_flush_needed', true);
 }
-// Uncomment this line to force flush rewrite rules, then comment it out after visiting the site once
+// Force flush rewrite rules
 add_action('init', 'ortho_force_flush_rewrite_rules', 20);
