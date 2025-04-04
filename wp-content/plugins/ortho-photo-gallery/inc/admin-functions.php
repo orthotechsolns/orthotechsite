@@ -71,15 +71,7 @@ function opg_register_settings() {
         'opg-settings'
     );
     
-    // Add settings fields
-    add_settings_field(
-        'opg_lightbox_enabled',
-        __('Enable Lightbox', 'ortho-photo-gallery'),
-        'opg_lightbox_enabled_callback',
-        'opg-settings',
-        'opg_general_settings'
-    );
-    
+    // Add settings field for columns only (lightbox setting removed)
     add_settings_field(
         'opg_default_columns',
         __('Default Columns', 'ortho-photo-gallery'),
@@ -93,20 +85,6 @@ add_action('admin_init', 'opg_register_settings');
 // Settings section callback
 function opg_general_settings_callback() {
     echo '<p>' . __('Configure general gallery settings.', 'ortho-photo-gallery') . '</p>';
-}
-
-// Lightbox setting callback
-function opg_lightbox_enabled_callback() {
-    $options = get_option('opg_gallery_settings', array(
-        'lightbox_enabled' => 1, // Default to enabled
-    ));
-    
-    ?>
-    <label>
-        <input type="checkbox" name="opg_gallery_settings[lightbox_enabled]" value="1" <?php checked(1, isset($options['lightbox_enabled']) ? $options['lightbox_enabled'] : 1); ?>>
-        <?php _e('Enable lightbox effect for gallery images', 'ortho-photo-gallery'); ?>
-    </label>
-    <?php
 }
 
 // Default columns setting callback

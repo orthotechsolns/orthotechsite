@@ -93,46 +93,6 @@
     font-size: 14px;
 }
 
-.opg-item-overlay .opg-categories {
-    display: block;
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-/* Filter styles */
-.opg-filters {
-    margin: 0 0 20px;
-}
-
-.opg-filters ul {
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.opg-filters li {
-    margin: 0 10px 10px 0;
-}
-
-.opg-filters a {
-    display: block;
-    padding: 8px 15px;
-    background: #f5f5f5;
-    color: #333;
-    text-decoration: none;
-    border-radius: 30px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-.opg-filters a:hover,
-.opg-filters a.active {
-    background: #0073aa;
-    color: #fff;
-}
-
 /* No items message */
 .opg-no-items {
     padding: 20px;

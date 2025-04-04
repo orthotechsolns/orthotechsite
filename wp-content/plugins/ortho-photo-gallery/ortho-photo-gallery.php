@@ -46,19 +46,10 @@ function opg_enqueue_scripts() {
     // Enqueue main CSS
     wp_enqueue_style('opg-styles', OPG_PLUGIN_URL . 'assets/css/opg-styles.css', array(), OPG_PLUGIN_VERSION);
     
-    // Enqueue lightbox CSS
+    // Enqueue lightbox CSS and JS (always enabled)
     wp_enqueue_style('opg-lightbox', OPG_PLUGIN_URL . 'assets/css/lightbox.min.css', array(), OPG_PLUGIN_VERSION);
-    
-    // Enqueue main JS
-    wp_enqueue_script('opg-scripts', OPG_PLUGIN_URL . 'assets/js/opg-scripts.js', array('jquery'), OPG_PLUGIN_VERSION, true);
-    
-    // Enqueue lightbox JS
     wp_enqueue_script('opg-lightbox', OPG_PLUGIN_URL . 'assets/js/lightbox.min.js', array('jquery'), OPG_PLUGIN_VERSION, true);
     
-    // Localize script with AJAX URL
-    wp_localize_script('opg-scripts', 'opg_ajax', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('opg-nonce')
-    ));
+    // Main JS file no longer needed since we removed filtering functionality
 }
 add_action('wp_enqueue_scripts', 'opg_enqueue_scripts');
