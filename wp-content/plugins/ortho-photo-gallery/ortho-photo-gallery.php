@@ -3,7 +3,7 @@
  * Plugin Name: Ortho Photo Gallery
  * Plugin URI: https://yourwebsite.com/ortho-photo-gallery
  * Description: A simple photo gallery plugin for displaying product images with filtering options.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Isabell Munroe
  * Author URI: https://yourwebsite.com
  * Text Domain: ortho-photo-gallery
