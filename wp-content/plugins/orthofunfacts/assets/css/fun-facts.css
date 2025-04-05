@@ -1,0 +1,24 @@
+.fun-fact-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+}
+.fun-fact-content {
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.07);
+    padding: 20px 25px;
+    border-left: 7px solid #0073aa;
+    display: flex;
+    align-items: center;
+}
+.fun-fact-icon {
+    font-size: 24px;
+    margin-right: 16px;
+}
+.fun-fact-text {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+}
