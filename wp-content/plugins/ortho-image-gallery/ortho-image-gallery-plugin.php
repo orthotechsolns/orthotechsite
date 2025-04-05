@@ -31,7 +31,7 @@ function ortho_photo_gallery()
         wp_get_attachment_url(1421),
         wp_get_attachment_url(1420),
         wp_get_attachment_url(1426),
-        wp_get_attachment_url(1427)
+        wp_get_attachment_url(1418)
     ];
 
     $styling = '<div class="ortho-gallery">';
