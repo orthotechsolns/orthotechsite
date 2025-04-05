@@ -6,3 +6,4 @@ access_log
 # Local development files
 local-phpinfo.php
 local-xdebuginfo.php
+wp-content/backuply/*
