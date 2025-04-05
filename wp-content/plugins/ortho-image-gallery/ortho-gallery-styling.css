@@ -1,0 +1,19 @@
+.ortho-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.ortho-gallery-item {
+    flex: 1 0 30%;
+}
+
+.ortho-gallery-image {
+    width: 100%;
+    border-radius: 10px;
+    transition: transform 0.5s ease;
+}
+
+.ortho-gallery-image:hover {
+    transform: scale(1.05);
+}
