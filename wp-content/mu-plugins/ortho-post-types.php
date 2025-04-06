@@ -31,22 +31,24 @@ function ortho_post_types()
         'show_admin_column' => true,
     ));
 
-    register_post_type('photo', array(
-        'capability_type' => 'photo',
-        'map_meta_cap' => true,
-        'public' => true,
-        'labels' => array(
-            'name' => 'Photos',
-            'add_new_item' => 'Add New Photo',
-            'edit_item' => 'Edit Photo',
-            'all_items' => 'All Photos',
-            'singular_name' => 'Photo'
-        ),
-        'has_archive' => true,
-        'menu_icon' => 'dashicons-camera',
-        'supports' => array('custom-fields'),
-        'rewrite' => array('slug' => 'photos'),
-    ));
+    // NOTE Deprecated - no longer used for site design
+    // register_post_type('photo', array(
+    //     'capability_type' => 'photo',
+    //     'map_meta_cap' => true,
+    //     'public' => true,
+    //     'labels' => array(
+    //         'name' => 'Photos',
+    //         'add_new_item' => 'Add New Photo',
+    //         'edit_item' => 'Edit Photo',
+    //         'all_items' => 'All Photos',
+    //         'singular_name' => 'Photo'
+    //     ),
+    //     'has_archive' => true,
+    //     'menu_icon' => 'dashicons-camera',
+    //     'supports' => array('custom-fields'),
+    //     'rewrite' => array('slug' => 'photos'),
+    // ));
+
 
     register_post_type('faq', array(
         'capability_type' => 'faq',
