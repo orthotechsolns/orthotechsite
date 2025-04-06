@@ -45,6 +45,28 @@ do_action( 'neve_html_start_before' );
 	<?php endif; ?>
 	<?php wp_head(); ?>
 
+	<!-- Custom login/registration buttons styling -->
+	<style>
+		.auth-buttons {
+			position: absolute;
+			top: 10px;
+			right: 20px;
+			z-index: 1000;
+		}
+		.auth-buttons a {
+			display: inline-block;
+			padding: 8px 15px;
+			background-color: #0073aa;
+			color: white;
+			text-decoration: none;
+			border-radius: 4px;
+			font-weight: bold;
+		}
+		.auth-buttons a:hover {
+			background-color: #005177;
+		}
+	</style>
+
 	<?php
 	/**
 	 * Executes actions before the head tag is closed.
@@ -56,6 +78,15 @@ do_action( 'neve_html_start_before' );
 </head>
 
 <body  <?php body_class(); ?> <?php neve_body_attrs(); ?> >
+<!-- User authentication buttons -->
+<div class="auth-buttons">
+	<?php if ( is_user_logged_in() ) : ?>
+		<a href="<?php echo wp_logout_url( home_url() ); ?>">Logout</a>
+	<?php else : ?>
+		<a href="<?php echo wp_login_url(); ?>">Login</a>
+		<a href="<?php echo wp_registration_url(); ?>">Register</a>
+	<?php endif; ?>
+</div>
 <?php
 /**
  * Executes actions after the body tag is opened.
