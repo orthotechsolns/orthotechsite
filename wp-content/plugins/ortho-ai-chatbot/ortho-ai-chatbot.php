@@ -37,16 +37,7 @@ register_activation_hook(__FILE__, 'activate');
 function enqueue_scripts()
 {
     wp_enqueue_style('dashicons');
-    wp_enqueue_style('chatbot-styles', PLUGIN_URL . 'assets/css/styles.css');
-    wp_enqueue_script('chatbot-script', PLUGIN_URL . 'assets/js/chatbotscripts.js', array(), '1.0', true);
-
-    $settings = get_option('settings', []);
-    wp_localize_script('chatbot-script', 'chatbotData', array(
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('chatbot-ajax-nonce'),
-        'bot_name' => $settings['bot_name'] ?? 'AI Assistant',
-        'welcome_message' => $settings['welcome_message'] ?? 'Hi there! How can I help you today?'
-    ));
+    wp_enqueue_style('chatbot-styles', PLUGIN_URL . 'assets/css/styles.css', array(), '1.0.1');
 }
 add_action('wp_enqueue_scripts', 'enqueue_scripts');
 
@@ -83,17 +74,136 @@ function add_chatbot_to_page()
     <button type="button" id="chat-toggle" class="chat-toggle">
         <span class="dashicons dashicons-format-chat"></span>
     </button>
+    
+    <script>
+    const chatbotData = {
+        restUrl: '<?php echo esc_js(rest_url('ortho-chatbot/v1/chat')); ?>',
+        restNonce: '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>',
+        bot_name: '<?php echo esc_js($bot_name); ?>',
+        welcome_message: '<?php echo esc_js($welcome_message); ?>'
+    };
+    
+    window.addEventListener('load', function() {
+        initChatbot();
+    });
+
+    function initChatbot() {
+        const toggle = document.getElementById('chat-toggle');
+        const chatbox = document.getElementById('chatbot');
+        const input = document.querySelector('.chat-input');
+        const sendBtn = document.querySelector('.send-btn');
+        const messages = document.querySelector('.chat-messages');
+        const closeBtn = document.querySelector('.close-btn');
+        
+        function showChat() {
+            chatbox.style.display = 'flex';
+            toggle.style.display = 'none';
+            input.focus();
+        }
+
+        function hideChat() {
+            chatbox.style.display = 'none';
+            toggle.style.display = 'block';
+        }
+
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            showChat();
+        });
+
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideChat();
+        });
+
+        sendBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            sendMessage();
+        });
+
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            addMessage(text, 'user');
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot-message loading';
+            loadingDiv.innerHTML = '<div class="message-content">...</div>';
+            messages.appendChild(loadingDiv);
+            scrollDown();
+
+            fetch(chatbotData.restUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': chatbotData.restNonce
+                },
+                body: JSON.stringify({
+                    message: text
+                })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (loadingDiv.parentNode) {
+                    messages.removeChild(loadingDiv);
+                }
+
+                if (data.response) {
+                    addMessage(data.response, 'bot');
+                } else {
+                    addMessage('Error: Could not get a response.', 'bot');
+                }
+            })
+            .catch((error) => {
+                if (loadingDiv.parentNode) {
+                    messages.removeChild(loadingDiv);
+                }
+                addMessage('Connection error. Please try again.', 'bot');
+            });
+        }
+
+        function addMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message ' + sender + '-message';
+            msgDiv.innerHTML = '<div class="message-content">' + text + '</div>';
+            messages.appendChild(msgDiv);
+            scrollDown();
+        }
+
+        function scrollDown() {
+            const chatBody = document.querySelector('.chat-body');
+            if (chatBody) {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        }
+
+        hideChat();
+    }
+    </script>
 <?php
 }
 add_action('wp_footer', 'add_chatbot_to_page');
 
-function ajax_chat_message()
-{
-    $message = sanitize_textarea_field($_POST['message'] ?? '');
-
-    $response = call_ai_api($message);
-
-    wp_send_json_success(['response' => $response]);
+function register_rest_api() {
+    register_rest_route('ortho-chatbot/v1', '/chat', array(
+        'methods' => 'POST',
+        'callback' => 'handle_chat_message',
+        'permission_callback' => '__return_true'
+    ));
 }
-add_action('wp_ajax_chat_message', 'ajax_chat_message');
-add_action('wp_ajax_nopriv_chat_message', 'ajax_chat_message');
+add_action('rest_api_init', 'register_rest_api');
+
+function handle_chat_message($request) {
+    $message = sanitize_textarea_field($request->get_param('message'));
+    $response = call_ai_api($message);
+    return array('response' => $response);
+}
