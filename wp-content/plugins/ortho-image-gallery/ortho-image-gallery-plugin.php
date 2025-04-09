@@ -5,7 +5,6 @@ Plugin Name: My Photo Gallery
 Description: A simple photo gallery plugin for OrthoTech Solutions which gives insight into the curation of our products.
 Version: 1.0
 Author: Isabell Munroe
-Author URI: https://example.com
 */
 
 function ortho_gallery_enqueue_styles()
